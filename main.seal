@@ -1,0 +1,41 @@
+include './raylib.seal'
+
+const
+  WIDTH  = 800
+  HEIGHT = 600
+  TITLE  = 'Guess PI in Seal'
+  FPS = 60
+
+set_config_flags(flags.FLAG_MSAA_4X_HINT)
+init_window(WIDTH, HEIGHT, TITLE)
+set_fps(FPS)
+
+const
+  font = load_font('JetBrainsMonoNerdFontMono-Regular.ttf', 256)
+  pi = '3.14159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460955058223172535940812848111745028410270193852110555964462294895493038196442881097566593344612847564823378678316527120190914564856692346034861045432664821339360726024914127372458700660631558817488152092096282925409171536436789259036001133053054882046'
+
+var
+  font_size = 64
+  start = 0
+  timer = 0
+  time  = 0.05
+while not window_should_close()
+  const dt = delta_time()
+  begin_drawing()
+  clear_background(colors.LILAC)
+  var pos = vec2(font_size / 4, font_size / 4)
+  for i in start to len(pi) - 1
+    draw_text_ex(font, pi[i], pos, font_size, 0, colors.BLACK)
+    if (pos.x = pos.x + font_size / 2) + font_size / 2 > WIDTH
+      pos.x = font_size / 4
+      if (pos.y = pos.y + font_size) + font_size > HEIGHT
+        if timer >= time
+          start = start + 1
+          timer = 0
+        else timer = timer + dt
+        stop
+        
+
+  end_drawing()
+
+close_window()
