@@ -1,0 +1,46 @@
+include './raylib.seal'
+include './config.seal'
+
+extern define Slider(speed)
+  return {
+    start = 0,
+    end   = 0,
+    speed = speed,
+    is_moving = false,
+    timer = 0,
+    time  = 0.6,
+    is_waiting = false
+  }
+
+extern define move_slider(slider, dest, dt)
+  writeln(slider.is_waiting)
+  var dist = dest - slider.end
+  if dist < 100 then dist = 100
+  slider.end = slider.end + dist * slider.speed * dt
+  if slider.end >= dest
+    slider.end = dest
+    if slider.timer >= slider.time
+      slider.is_waiting = false
+      close_slider(slider, dt)
+    else
+      slider.timer = slider.timer + dt
+      slider.is_waiting = true
+
+extern define close_slider(slider, dt)
+  var dist = slider.end - slider.start
+  if dist < 100 then dist = 100
+  slider.start = slider.start + dist * slider.speed * dt
+  if slider.start >= slider.end
+    slider.end = slider.end
+    slider.is_moving = false
+    slider.start = slider.end = 0
+    slider.timer = 0
+
+extern define draw_slider(slider)
+  draw_rectangle(
+    slider.start,
+    0,
+    slider.end,
+    HEIGHT,
+    colors.BLACK
+  )

@@ -1,0 +1,48 @@
+include './raylib.seal'
+
+extern const button_states = {
+  STILL = 0,
+  HOLD  = 1
+}
+
+extern define Button(x, y, textures, scaler)
+  return {
+    pos = {
+      x = x,
+      y = y
+    },
+    textures = textures,
+    scaler = scaler,
+    state = button_states.STILL,
+    is_mouse_over = false
+  }
+
+extern define is_button_pressed(button)
+  const mpos = mouse_pos()
+  const tex  = button.textures[0]
+  if (mpos.x < button.pos.x or
+  mpos.x > button.pos.x + tex.width * button.scaler or
+  mpos.y < button.pos.y or
+  mpos.y > button.pos.y + tex.height * button.scaler)
+    button.state = button_states.STILL
+    button.is_mouse_over = false
+    return false
+  
+  button.is_mouse_over = true
+  if is_mouse_pressed(0) and button.state == button_states.STILL
+    button.state = button_states.HOLD
+  else if is_mouse_released(0) and button_states.HOLD
+    button.state = button_states.STILL
+    return true
+
+  return false
+
+extern define draw_button(button)
+  const texture = button.textures[button.state]
+  draw_texture_ex(
+    texture,
+    button.pos,
+    0,
+    button.scaler,
+    if button.is_mouse_over then colors.LIGHTGRAY else colors.WHITE
+  ) 

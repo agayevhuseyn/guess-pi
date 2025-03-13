@@ -1,0 +1,5 @@
+extern const
+  WIDTH  = 800
+  HEIGHT = 600
+  TITLE  = 'Guess PI in Seal'
+  FPS = 60

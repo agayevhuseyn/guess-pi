@@ -128,7 +128,9 @@ extern const colors = {
   ORANGE = color(255, 100, 20, 255),
   LILAC  = color(147, 148, 205, 255),
   BLACK  = color(0, 0, 0, 255),
-  WHITE  = color(255, 255, 255, 255)
+  WHITE  = color(255, 255, 255, 255),
+  GRAY   = color(130, 130, 130, 255),
+  LIGHTGRAY = color(220, 220, 220, 255)
 }
 
 extern define vec2(x, y)
@@ -229,6 +231,12 @@ extern define is_mouse_down(button)
 
 extern define is_mouse_pressed(button)
   return raylib:is_mouse_pressed(button)
+
+extern define is_mouse_released(button)
+  return raylib:is_mouse_released(button)
+
+extern define is_mouse_up(button)
+  return raylib:is_mouse_up(button)
 
 extern define mouse_x()
   return raylib:mouse_x()
