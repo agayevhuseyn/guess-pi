@@ -130,7 +130,8 @@ extern const colors = {
   BLACK  = color(0, 0, 0, 255),
   WHITE  = color(255, 255, 255, 255),
   GRAY   = color(130, 130, 130, 255),
-  LIGHTGRAY = color(220, 220, 220, 255)
+  LIGHTGRAY = color(220, 220, 220, 255),
+  EMPTY  = color(0, 0, 0, 0)
 }
 
 extern define vec2(x, y)
@@ -273,3 +274,30 @@ extern define get_screen_width()
 
 extern define get_screen_height()
   return raylib:get_screen_height()
+
+extern define init_audio_device()
+  raylib:init_audio_device()
+
+extern define close_audio_device()
+  raylib:close_audio_device()
+
+extern define is_audio_device_ready()
+  return raylib:is_audio_device_ready()
+
+extern define load_sound(path)
+  return raylib:load_sound(path)
+
+extern define play_sound(sound)
+  raylib:play_sound(sound)
+
+extern define stop_sound(sound)
+  raylib:stop_sound(sound)
+
+extern define pause_sound(sound)
+  raylib:pause_sound(sound)
+
+extern define resume_sound(sound)
+  raylib:resume_sound(sound)
+
+extern define is_sound_playing(sound)
+  return raylib:is_sound_playing(sound)

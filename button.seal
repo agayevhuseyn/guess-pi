@@ -44,5 +44,5 @@ extern define draw_button(button)
     button.pos,
     0,
     button.scaler,
-    if button.is_mouse_over then colors.LIGHTGRAY else colors.WHITE
+    if button.is_mouse_over then color(0, 255, 0, 255) else color(0, 200, 0, 255)
   ) 

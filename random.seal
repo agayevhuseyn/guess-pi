@@ -1,0 +1,4 @@
+include random
+
+extern define rand()
+  return random:rand()

@@ -13,7 +13,6 @@ extern define Slider(speed)
   }
 
 extern define move_slider(slider, dest, dt)
-  writeln(slider.is_waiting)
   var dist = dest - slider.end
   if dist < 100 then dist = 100
   slider.end = slider.end + dist * slider.speed * dt
@@ -31,7 +30,6 @@ extern define close_slider(slider, dt)
   if dist < 100 then dist = 100
   slider.start = slider.start + dist * slider.speed * dt
   if slider.start >= slider.end
-    slider.end = slider.end
     slider.is_moving = false
     slider.start = slider.end = 0
     slider.timer = 0
@@ -40,7 +38,7 @@ extern define draw_slider(slider)
   draw_rectangle(
     slider.start,
     0,
-    slider.end,
+    slider.end - slider.start,
     HEIGHT,
     colors.BLACK
   )

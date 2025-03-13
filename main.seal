@@ -2,14 +2,17 @@ include './raylib.seal'
 include './button.seal'
 include './config.seal'
 include './slider.seal'
+include './random.seal'
+include './game.seal'
+include math
 
 set_config_flags(flags.FLAG_MSAA_4X_HINT)
 init_window(WIDTH, HEIGHT, TITLE)
 set_fps(FPS)
+// set_exit_key(keys.KEY_NULL)
 
 const
-  font = load_font('joystix.otf', 256)
-  pi = '3.14159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460955058223172535940812848111745028410270193852110555964462294895493038196442881097566593344612847564823378678316527120190914564856692346034861045432664821339360726024914127372458700660631558817488152092096282925409171536436789259036001133053054882046'
+  font = load_font('assets/joystix.otf', 256)
 
 var
   font_size = 64
@@ -29,36 +32,101 @@ const
     4
   )
   slider = Slider(2.2)
+  game_title = {
+    tex  = load_texture('assets/title.png'),
+    pos  = vec2(186, 100),
+    time = 0
+  }
+  start_title = {
+    tex  = load_texture('assets/presstxt.png'),
+    pos  = vec2(64, 330)
+  }
+
+const
+  MENU = 0
+  GAME = 1
+
+var game_state = MENU
+var loading_state
 
 while not window_should_close()
   const dt = delta_time()
 
-  if is_button_pressed(play_btn) then slider.is_moving = true
+  if !slider.is_moving
+    if game_state == MENU
+      //if is_button_pressed(play_btn) then slider.is_moving = true
+      if get_key_pressed() != 0
+        slider.is_moving = true
+        loading_state = GAME
+    else if game_state == GAME
+      update_game(dt)
+      if is_key_pressed(keys.KEY_Q)
+        slider.is_moving = true
+        loading_state = MENU
+      else if is_key_pressed(keys.KEY_R)
+        slider.is_moving = true
+        loading_state = GAME
 
   if slider.is_moving
     move_slider(slider, WIDTH, dt)
+    if slider.is_waiting
+      game_state = loading_state
+      if loading_state == GAME
+        restart_game()
+
+  game_title.time = game_title.time + dt
 
   begin_drawing()
-  clear_background(colors.LILAC)
-  var pos = vec2(font_size / 4, font_size / 4)
-  for i in start to len(pi)
-    draw_text_ex(font, pi[i], pos, font_size, 0, color(0, 0, 0, 200))
-    if (pos.x = pos.x + font_size / 2 + spacing) + font_size / 2 > WIDTH
-      pos.x = font_size / 4
-      if (pos.y = pos.y + font_size) + font_size > HEIGHT
-        if i + 1 < len(pi)
-          if timer >= time
-            start = start + 1
-            timer = 0
-          else timer = timer + dt
-          stop
-        else
-          if timer >= time
-            start = 0
-            timer = 0
-          else timer = timer + dt
-  
-  draw_button(play_btn)
+  clear_background(color(0, 50, 0, 255))
+
+  if game_state == MENU
+    var pos = vec2(font_size / 4, font_size / 4)
+    for i in start to len(PI)
+      draw_text_ex(font, PI[i], pos, font_size, 0, color(0,
+                                                         rand() % 200,
+                                                         0,
+                                                         rand() % 120 + 125))
+      if (pos.x = pos.x + font_size / 2 + spacing) + font_size / 2 > WIDTH
+        pos.x = font_size / 4
+        if (pos.y = pos.y + font_size) + font_size > HEIGHT
+          if i + 1 < len(PI)
+            if timer >= time
+              start = start + 1
+              timer = 0
+            else timer = timer + dt
+            stop
+          else
+            if timer >= time
+              start = 0
+              timer = 0
+            else timer = timer + dt
+    // game title
+    draw_texture_ex(
+      game_title.tex,
+      vec2(
+        game_title.pos.x,
+        game_title.pos.y + math:cos(game_title.time * 2) * 16
+      ),
+      0,
+      2,
+      color(120, 255, 47, 255)
+    )
+    draw_texture_ex(
+      start_title.tex,
+      vec2(
+        start_title.pos.x,
+        start_title.pos.y + math:cos(game_title.time * 2) * 16
+      ),
+      0,
+      2,
+      color(120, 255, 47, 255)
+    )
+    
+    //draw_button(play_btn)
+
+  else if game_state == GAME
+    render_game(font)
+
   if slider.is_moving then draw_slider(slider)
 
   end_drawing()
