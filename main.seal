@@ -8,6 +8,7 @@ include math
 
 set_config_flags(flags.FLAG_MSAA_4X_HINT)
 init_window(WIDTH, HEIGHT, TITLE)
+init_audio_device()
 set_fps(FPS)
 // set_exit_key(keys.KEY_NULL)
 
@@ -48,6 +49,8 @@ const
 
 var game_state = MENU
 var loading_state
+
+init_game()
 
 while not window_should_close()
   const dt = delta_time()
@@ -131,4 +134,5 @@ while not window_should_close()
 
   end_drawing()
 
+close_audio_device()
 close_window()

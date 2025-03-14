@@ -26,6 +26,8 @@ var
     pos  = vec2(64, 256),
     time = 0
   }
+  hit_sound
+  wildcard_sound
 
 define draw_time_bar(time_bar)
   // empty
@@ -44,6 +46,12 @@ define draw_time_bar(time_bar)
     time_bar.size.y,
     color(255, 30, 0, 255)
   )
+
+extern define init_game()
+  heart_tex = load_texture('assets/heart.png')
+  restart_txt.tex = load_texture('assets/restarttxt.png')
+  hit_sound = load_sound('assets/hitHurt.wav')
+  wildcard_sound = load_sound('assets/powerUp.wav')
 
 extern define restart_game()
   timer = time
@@ -103,15 +111,13 @@ extern define render_game(font)
     color(0, 255, 0, 255)
   )
   // lives
-  if heart_tex == null then heart_tex = load_texture('assets/heart.png')
   const life_pos = vec2(20, 512)
   for _ in lives
     draw_texture_ex(heart_tex, life_pos, 0, 4, color(0, 255, 0, 255))
     life_pos.x = life_pos.x + 84
 
   if game_over
-    draw_rectangle(0, 0, WIDTH, HEIGHT, color(255, 0, 0, 40))
-    if restart_txt.tex == null then restart_txt.tex = load_texture('assets/restarttxt.png')
+    draw_rectangle(0, 0, WIDTH, HEIGHT, color(255, 0, 0, 40)) 
     draw_texture_ex(
       restart_txt.tex,
       vec2(
@@ -137,10 +143,13 @@ extern define update_game(dt)
     if key == PI[index]
       index = index + 1
       timer = time
-    else if (lives = lives - 1) <= 0
-      game_over = true
-      return
+    else if lives > 0
+      if !is_sound_playing(hit_sound) then play_sound(hit_sound)
+      if (lives = lives - 1) <= 0
+        game_over = true
+        return
   if is_key_pressed(keys.KEY_SPACE) and wildcards > 0
+    if !is_sound_playing(wildcard_sound) then play_sound(wildcard_sound)
     wildcards = wildcards - 1
     index = index + 1
     timer = time
